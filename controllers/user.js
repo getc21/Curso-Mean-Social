@@ -3,6 +3,7 @@
 var bcrypt = require('bcrypt-nodejs');
 var mongoosePaginate = require('mongoose-pagination');
 var User = require('../models/user');
+var Follow = require('../models/follow');
 var jwt = require('../services/jwt');
 var fs = require('fs');
 var path = require('path');
@@ -112,8 +113,14 @@ function getUser(req, res) {
 
         if (!user)
             return res.status(404).send({message: 'El usuario no existe'});
+        
+        Follow.findOne({"user":req.user.sub, "followed":userId}).exec((err, follow) => {
+            if(err) return res.status(500).send({message: 'Error al comprobar el seguimiento'});
+            
+            return res.status(200).send({user, follow});
+        });
 
-        return res.status(200).send({user});
+        
     });
 }
 
