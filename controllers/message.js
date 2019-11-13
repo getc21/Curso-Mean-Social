@@ -43,7 +43,7 @@ function getReceivedMessages(req, res) {
     }
     var itemsPerPage = 4;
 
-    Message.find({receiver: userId}).populate('emitter').paginate(page, itemsPerPage, (err, messages, total) => {
+    Message.find({receiver: userId}).populate('emitter','name surname image nick _id').paginate(page, itemsPerPage, (err, messages, total) => {
         if (err)
             return res.status(500).send({message: 'Error en la peticion'});
         if (!messages)
@@ -62,3 +62,4 @@ module.exports = {
     saveMessage,
     getReceivedMessages
 }
+
